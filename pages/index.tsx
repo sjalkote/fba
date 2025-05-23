@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import BlogPost from '../models/BlogPost';
 
 type BlogPost = {
   _id: string;
@@ -49,15 +50,35 @@ export default function BlogPage() {
 
   return (
     <div style={{ maxWidth: 600, margin: '2rem auto', padding: '1rem' }}>
-      <h1>Blog Posts</h1>
-      <form onSubmit={handleSubmit} style={{ marginBottom: '2rem' }}>
+      <h1 style={{ fontSize: 40 }}>Blog Posts</h1>
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          maxWidth: '500px',
+          margin: '40px auto',
+          padding: '32px',
+          background: '#fafbfc',
+          borderRadius: '16px',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.07)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '20px',
+        }}
+      >
         <input
           name="title"
           placeholder="Title"
           value={form.title}
           onChange={handleChange}
           required
-          style={{ width: '100%', marginBottom: 8, padding: 8 }}
+          style={{
+            border: '1px solid #d1d5db',
+            borderRadius: '8px',
+            padding: '12px',
+            fontSize: '1rem',
+            outline: 'none',
+            transition: 'border 0.2s',
+          }}
         />
         <textarea
           name="content"
@@ -65,8 +86,15 @@ export default function BlogPage() {
           value={form.content}
           onChange={handleChange}
           required
-          rows={4}
-          style={{ width: '100%', marginBottom: 8, padding: 8 }}
+          rows={5}
+          style={{
+            border: '1px solid #d1d5db',
+            borderRadius: '8px',
+            padding: '12px',
+            fontSize: '1rem',
+            outline: 'none',
+            transition: 'border 0.2s',
+          }}
         />
         <input
           name="author"
@@ -74,9 +102,29 @@ export default function BlogPage() {
           value={form.author}
           onChange={handleChange}
           required
-          style={{ width: '100%', marginBottom: 8, padding: 8 }}
+          style={{
+            border: '1px solid #d1d5db',
+            borderRadius: '8px',
+            padding: '12px',
+            fontSize: '1rem',
+            outline: 'none',
+            transition: 'border 0.2s',
+          }}
         />
-        <button type="submit" disabled={loading} style={{ padding: '8px 16px' }}>
+        <button
+          type="submit"
+          disabled={loading}
+          style={{
+            background: 'darkblue',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '8px',
+            padding: '12px 0',
+            fontSize: '1.1rem',
+            cursor: 'pointer',
+            transition: 'background 0.2s',
+          }}
+        >
           {loading ? 'Posting...' : 'Create Post'}
         </button>
         {error && <div style={{ color: 'red', marginTop: 8 }}>{error}</div>}
@@ -84,10 +132,10 @@ export default function BlogPage() {
       <div>
         {posts.length === 0 && <p>No blog posts yet.</p>}
         {posts.map((post) => (
-          <div key={post._id} style={{ border: '1px solid #ccc', padding: 16, marginBottom: 16 }}>
-            <h2>{post.title}</h2>
-            <p>{post.content}</p>
-            <div style={{ fontSize: 12, color: '#555' }}>
+          <div key={post._id} className="blog-post-container">
+            <h2 className="blog-post-title">{post.title}</h2>
+            <p className="blog-post-content">{post.content}</p>
+            <div className="blog-post-meta" style={{ fontSize: 12, color: '#555' }}>
               By {post.author} on {new Date(post.createdAt).toLocaleString()}
             </div>
           </div>
