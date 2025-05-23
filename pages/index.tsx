@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import BlogPost from '../models/BlogPost';
 
 type BlogPost = {
@@ -14,6 +15,7 @@ export default function BlogPage() {
   const [form, setForm] = useState({ title: '', content: '', author: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPreview, setShowPreview] = useState(true);
 
   // Fetch blog posts
   useEffect(() => {
@@ -111,22 +113,57 @@ export default function BlogPage() {
             transition: 'border 0.2s',
           }}
         />
-        <button
-          type="submit"
-          disabled={loading}
-          style={{
-            background: 'darkblue',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '8px',
-            padding: '12px 0',
-            fontSize: '1.1rem',
-            cursor: 'pointer',
-            transition: 'background 0.2s',
-          }}
-        >
-          {loading ? 'Posting...' : 'Create Post'}
-        </button>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <button
+            type="submit"
+            disabled={loading}
+            style={{
+              background: 'darkblue',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '8px',
+              padding: '12px 0',
+              fontSize: '1.1rem',
+              cursor: 'pointer',
+              transition: 'background 0.2s',
+              flex: 1,
+            }}
+          >
+            {loading ? 'Posting...' : 'Create Post'}
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowPreview((prev) => !prev)}
+            style={{
+              background: '#e5e7eb',
+              color: '#222',
+              border: 'none',
+              borderRadius: '8px',
+              padding: '12px 0',
+              fontSize: '1.1rem',
+              cursor: 'pointer',
+              transition: 'background 0.2s',
+              flex: 1,
+            }}
+          >
+            {showPreview ? 'Hide Preview' : 'Preview'}
+          </button>
+        </div>
+        {showPreview && (
+          <div
+            style={{
+              background: '#f3f4f6',
+              borderRadius: '8px',
+              padding: '16px',
+              marginTop: '8px',
+              minHeight: '80px',
+            }}
+          >
+            <h3 style={{ margin: '0 0 8px 0' }}>{form.title || 'Title Preview'}</h3>
+            <ReactMarkdown>{form.content || 'Content Preview'}</ReactMarkdown>
+            <div style={{ fontSize: 12, color: '#555', marginTop: 8 }}>{form.author ? `By ${form.author}` : 'Author Preview'}</div>
+          </div>
+        )}
         {error && <div style={{ color: 'red', marginTop: 8 }}>{error}</div>}
       </form>
       <div>
@@ -134,7 +171,9 @@ export default function BlogPage() {
         {posts.map((post) => (
           <div key={post._id} className="blog-post-container">
             <h2 className="blog-post-title">{post.title}</h2>
-            <p className="blog-post-content">{post.content}</p>
+            <div className="blog-post-content">
+              <ReactMarkdown>{post.content}</ReactMarkdown>
+            </div>
             <div className="blog-post-meta" style={{ fontSize: 12, color: '#555' }}>
               By {post.author} on {new Date(post.createdAt).toLocaleString()}
             </div>
